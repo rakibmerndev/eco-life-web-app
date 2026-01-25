@@ -16,6 +16,7 @@ import {
 } from "firebase/auth";
 
 import toast from "react-hot-toast";
+import { axiosPublic } from "../api/axiosPublic";
 
 //* interfaces
 interface AuthInfo {
@@ -67,6 +68,12 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
       toast.success("Signup successful!");
 
       const currentUser = auth.currentUser;
+
+      await axiosPublic.post("/users", {
+        email: email,
+        name: currentUser?.displayName || "New User",
+        imageUrl: currentUser?.photoURL || "",
+      });
 
       if (currentUser) {
         await sendEmailVerification(currentUser);
@@ -140,6 +147,13 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+
+      await axiosPublic.post("/users", {
+        email: user.email,
+        name: user.displayName || "New User",
+        imageUrl: user.photoURL || "",
+      });
+
       if (user) {
         toast.success("Login successful!");
         setLoading(false);

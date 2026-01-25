@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    ImageUrl: {
+    imageUrl: {
       type: String,
       required: false,
       default: "https://cdn-icons-png.flaticon.com/512/6522/6522516.png",

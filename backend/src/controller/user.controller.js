@@ -1,7 +1,9 @@
 import { User } from "../models/user.model.js";
 
 export const createUser = async (req, res) => {
-  const { name, email, ImageUrl, role } = req.body;
+  const { name, email, imageUrl, role } = req.body;
+
+  console.log("Hitting CreateUser")
 
   // Check if User exists on the database
   try {
@@ -13,7 +15,7 @@ export const createUser = async (req, res) => {
     const newUser = new User({
       name,
       email,
-      ImageUrl,
+      imageUrl,
       role,
     });
     await newUser.save();
