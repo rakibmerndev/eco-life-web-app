@@ -1,8 +1,14 @@
 import { FC } from "react";
-import MainButton from "../../Button/MainButton";
+import toast from "react-hot-toast";
+
 import { MdEmail } from "react-icons/md";
 
 const Newsletter: FC = (): JSX.Element => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    toast.success("Thank you for subscribing to our newsletter!");
+  };
+
   return (
     <section className="mt-16 mb-20 relative">
       <div className="absolute -z-30 -left-11">
@@ -13,7 +19,11 @@ const Newsletter: FC = (): JSX.Element => {
         <div className="md:max-w-[930px] md:max-h-[430px] bg-white flex flex-col md:flex-row">
           {/* image */}
           <div className="md:w-1/2">
-            <img src="/news.png" className="object-cover h-full w-full" alt="" />
+            <img
+              src="/news.png"
+              className="object-cover h-full w-full"
+              alt=""
+            />
           </div>
           {/* form */}
           <div className="md:w-1/2">
@@ -38,7 +48,13 @@ const Newsletter: FC = (): JSX.Element => {
                   <MdEmail />
                 </div>
               </label>
-              <MainButton value="subscribe" classes="my-4 lg:my-0 lg:mt-10 px-10 py-2" />
+              <button
+                type="submit"
+                onClick={handleClick}
+                className="my-4 lg:my-0 lg:mt-10 px-10 py-2 bg-primary-color text-white uppercase ${classes} rounded-lg hover:bg-green-700 transition-all duration-300 ease-linear hover:scale-105 hover:shadow-xl"
+              >
+                Subscribe
+              </button>
             </form>
           </div>
         </div>

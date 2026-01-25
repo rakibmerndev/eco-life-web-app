@@ -7,6 +7,7 @@ import "./Banner.css";
 
 import butterFlyAnimation from "./butterfly.json";
 import MainButton from "../../Button/MainButton";
+import { Link } from "react-router-dom";
 
 const Banner: FC = (): JSX.Element => {
   return (
@@ -38,7 +39,12 @@ const Banner: FC = (): JSX.Element => {
             <br />
             products and make every purchase count
           </p>
-         <MainButton value="Shop now" classes="mt-8 lg:mt-12 px-4 py-2 lg:px-10 lg:py-4 "/>
+          <Link to={"/shop"}>
+            <MainButton
+              value="Shop now"
+              classes="mt-8 lg:mt-12 px-4 py-2 lg:px-10 lg:py-4 "
+            />
+          </Link>
 
           <div className="absolute translate-y-4 md:bottom-8 md:left-24 lg:left-36 lg:bottom-14 xl:left-36 xl:bottom-14 2xl:bottom-14 2xl:left-36 butter-fly">
             <div className="rotate-[-45deg]">
