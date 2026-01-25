@@ -5,6 +5,7 @@ import express from "express";
 import orderRoute from "./routes/order.route.js";
 import productRoute from "./routes/product.route.js";
 import userRoute from "./routes/user.route.js";
+import { connectDB } from "./lib/db.js";
 
 dotenv.config();
 
@@ -29,4 +30,5 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  connectDB();
 });
