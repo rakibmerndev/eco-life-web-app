@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { MdEmail } from "react-icons/md";
 
 const Newsletter: FC = (): JSX.Element => {
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (e:React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     toast.success("Thank you for subscribing to our newsletter!");
   };
