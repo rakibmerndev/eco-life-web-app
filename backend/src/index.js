@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
 
 import orderRoute from "./routes/order.route.js";
 import productRoute from "./routes/product.route.js";
@@ -10,6 +11,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    withCredentials: true,
+  }),
+);
 
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
