@@ -1,6 +1,6 @@
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import cors from "cors";
 
 import orderRoute from "./routes/order.route.js";
 import productRoute from "./routes/product.route.js";
