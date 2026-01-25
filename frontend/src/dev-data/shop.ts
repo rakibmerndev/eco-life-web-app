@@ -3,7 +3,7 @@ import { ProductProps } from "./featuredProductData";
 export const ShopProducts: ProductProps[] = [
   {
     id: 1,
-    name: "Reusable Stainless Steel Water Bottle",
+    name: "Stainless Steel Water Bottle",
     discountedPrice: 950,
     price: 1100,
     image:
