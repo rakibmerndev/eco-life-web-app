@@ -1,9 +1,32 @@
+import { useEffect, useState } from "react";
 import ProductCard from "../../components/ProductCard/ProductCard";
+import { axiosPublic } from "../../api/axiosPublic";
 
-import { ShopProducts } from "../../dev-data/shop";
+export interface ProductProps {
+  id: string | number;
+  name: string;
+  discountedPrice: number;
+  price: number;
+  image: string;
+  reviewsNumber: number;
+}
 
 const Shop = () => {
-  const AllProducts = ShopProducts;
+  const [data, setData] = useState<ProductProps[]>();
+
+  useEffect(() => {
+    const fetchProductsData = async () => {
+      try {
+        const res = await axiosPublic.get("/products");
+        setData(res.data);
+      } catch (error) {
+        console.log("Error fetching Products data", error);
+      }
+    };
+
+    fetchProductsData();
+  }, []);
+
   return (
     <div className="min-h-svh">
       <div className="mb-20">
@@ -15,8 +38,8 @@ const Shop = () => {
         </h1>
 
         <div className="grid grid-cols-1  md:grid-cols-3 gap-16 p-16">
-          {AllProducts.map((product) => (
-            <ProductCard key={product?.id} product={product} />
+          {data?.map((product: ProductProps) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>

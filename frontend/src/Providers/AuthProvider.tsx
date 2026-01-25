@@ -188,7 +188,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
       if (currentUser) {
         setUser(currentUser);
         setLoading(false);
-        console.log(currentUser);
       } else {
         setUser(null);
         setLoading(true);
