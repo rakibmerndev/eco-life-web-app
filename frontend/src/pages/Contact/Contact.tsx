@@ -26,10 +26,15 @@ const Contact: FC = (): JSX.Element => {
               </p>
 
               <div className="space-y-2 text-gray-700">
-                <p className="flex gap-2 items-center"><FaPhone /> +92 123 456 789</p>
-                <p className="flex gap-2 items-center">  <MdEmail /> support@ecolife.com</p>
                 <p className="flex gap-2 items-center">
-                   <FaLocationDot /> EcoLife Green HQ <br />
+                  <FaPhone /> +92 123 456 789
+                </p>
+                <p className="flex gap-2 items-center">
+                  {" "}
+                  <MdEmail /> support@ecolife.com
+                </p>
+                <p className="flex gap-2 items-center">
+                  <FaLocationDot /> EcoLife Green HQ <br />
                   123 Greenway Lane <br />
                   Sustainable City, ECO 123 <br />
                   Earth
@@ -57,7 +62,9 @@ const Contact: FC = (): JSX.Element => {
                 ></textarea>
 
                 <button
-                  type="submit"
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                    e.preventDefault()
+                  }
                   className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
                 >
                   Send Message
