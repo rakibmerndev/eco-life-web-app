@@ -14,7 +14,7 @@ export const generateAuthToken = async (req, res) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       maxAge: 5 * 24 * 60 * 60 * 1000,
     })
-    .send({ success: true });
+    .json({ success: true });
 };
 
 export const clearAuthToken = async (req, res) => {
@@ -25,5 +25,5 @@ export const clearAuthToken = async (req, res) => {
     maxAge: 0,
   };
 
-  res.cookie("authToken", "", cookieOptions).send({ success: true });
+  res.cookie("authToken", "", cookieOptions).json({ success: true });
 };
