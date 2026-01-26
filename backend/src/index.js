@@ -2,11 +2,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
+import { connectDB } from "./lib/db.js";
+import authRoute from "./routes/auth.route.js";
 import orderRoute from "./routes/order.route.js";
 import productRoute from "./routes/product.route.js";
 import userRoute from "./routes/user.route.js";
-import authRoute from "./routes/auth.route.js";
-import { connectDB } from "./lib/db.js";
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://eco-life-web-app.vercel.app"],
-    withCredentials: true,
+    credentials: true,
   }),
 );
 
@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 
 const startServerAsync = async () => {
   try {
-    await connectToDatabase();
+    await connectDB();
 
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
@@ -42,15 +42,5 @@ const startServerAsync = async () => {
     process.exit(1);
   }
 };
-
-const connectToDatabase = async () => {
-  try {
-    await connectDB();
-  } catch (error) {
-    console.error(`Failed to connect to database: ${error.message}`);
-    throw error;
-  }
-};
-
 
 startServerAsync();
