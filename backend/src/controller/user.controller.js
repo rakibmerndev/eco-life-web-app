@@ -3,8 +3,6 @@ import { User } from "../models/user.model.js";
 export const createUser = async (req, res) => {
   const { name, email, imageUrl, role } = req.body;
 
-  console.log("Hitting CreateUser")
-
   // Check if User exists on the database
   try {
     const existingUser = await User.findOne({ email });
@@ -38,15 +36,15 @@ export const getCurrentUser = async (req, res) => {
   }
 };
 
-export const deleteUser = async (req, res) => {
-  const { id } = req.params;
+export const deleteUserById = async (req, res) => {
+  const userId = req.params.id;
   try {
-    const user = await User.findByIdAndDelete(id);
-    if (!user) {
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
       return res.status(404).json({ message: "User not found" });
     }
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
-    req.status(500).json({ message: "Server Error", error: error.message });
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
