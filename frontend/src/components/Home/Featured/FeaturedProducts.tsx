@@ -1,10 +1,25 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import Header from "../../shared/Header/Header";
-import { Products } from "../../../dev-data/featuredProductData";
+
 import ProductCard from "../../ProductCard/ProductCard";
+import { ProductProps } from "../../../pages/Shop/Shop";
+import { axiosPublic } from "../../../api/axiosPublic";
 
 const FeaturedProducts: FC = (): JSX.Element => {
-  const AllProducts = Products;
+  const [products, setProducts] = useState<ProductProps[]>();
+
+  useEffect(() => {
+    const getFeaturedProducts = async () => {
+      try {
+        const response = await axiosPublic.get("/products/featured");
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Error fetching featured products:", error);
+      }
+    };
+
+    getFeaturedProducts();
+  }, []);
 
   return (
     <section className="relative mt-16">
@@ -26,8 +41,8 @@ const FeaturedProducts: FC = (): JSX.Element => {
       </div>
       {/* main content */}
       <div className="mt-28 grid grid-cols-1  md:grid-cols-3 gap-16 p-16">
-        {AllProducts.map((product) => (
-         <ProductCard key={product?.id} product={product} />
+        {products?.map((product: ProductProps) => (
+          <ProductCard key={product?.id} product={product} />
         ))}
       </div>
     </section>

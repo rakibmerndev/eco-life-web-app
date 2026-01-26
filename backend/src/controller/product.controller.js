@@ -76,3 +76,15 @@ export const deleteProductById = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+
+export const getFeaturedProducts = async (req, res) => {
+  try {
+    const featuredProducts = await Product.find({ isFeatured: true });
+    if (!featuredProducts.length) {
+      return res.status(404).json({ message: "No featured products found" });
+    }
+    res.status(200).json(featuredProducts);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
