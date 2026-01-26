@@ -14,9 +14,7 @@ export const generateAuthToken = async (req, res) => {
     maxAge: 5 * 24 * 60 * 60 * 1000,
   };
 
-  res
-    .cookie("authToken", token, cookieOptions)
-    .json({ success: true, message: token });
+  res.cookie("authToken", token, cookieOptions).json({ success: true });
 };
 
 export const clearAuthToken = async (req, res) => {
@@ -27,7 +25,5 @@ export const clearAuthToken = async (req, res) => {
     maxAge: 0,
   };
 
-  res
-    .cookie("authToken", "", cookieOptions)
-    .json({ success: true, message: "Logout successful" });
+  res.cookie("authToken", "", cookieOptions).json({ success: true });
 };
