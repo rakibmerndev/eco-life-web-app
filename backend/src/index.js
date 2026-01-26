@@ -30,7 +30,27 @@ app.get("/", (req, res) => {
   res.send("Server is up and running!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  connectDB();
-});
+const startServerAsync = async () => {
+  try {
+    await connectToDatabase();
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error(`Failed to connect to database: ${error.message}`);
+    process.exit(1);
+  }
+};
+
+const connectToDatabase = async () => {
+  try {
+    await connectDB();
+  } catch (error) {
+    console.error(`Failed to connect to database: ${error.message}`);
+    throw error;
+  }
+};
+
+
+startServerAsync();
