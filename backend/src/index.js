@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 
 import { connectDB } from "./lib/db.js";
+import adminRoute from "./routes/admin.route.js"
 import authRoute from "./routes/auth.route.js";
 import orderRoute from "./routes/order.route.js";
 import productRoute from "./routes/product.route.js";
@@ -25,6 +26,7 @@ app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/auth", authRoute);
+app.use('/api/admin',adminRoute)
 
 app.get("/", (req, res) => {
   res.send("Server is up and running!");

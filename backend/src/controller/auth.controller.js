@@ -1,20 +1,22 @@
 import jwt from "jsonwebtoken";
 
 export const generateAuthToken = async (req, res) => {
-  const { user } = request.body;
+  const { user } = req.body;
 
-  const authToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "5d",
   });
 
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    maxAge: 5 * 24 * 60 * 60 * 1000,
+  };
+
   res
-    .cookie("authToken", authToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-      maxAge: 5 * 24 * 60 * 60 * 1000,
-    })
-    .json({ success: true });
+    .cookie("authToken", token, cookieOptions)
+    .json({ success: true, message: token });
 };
 
 export const clearAuthToken = async (req, res) => {
@@ -25,5 +27,7 @@ export const clearAuthToken = async (req, res) => {
     maxAge: 0,
   };
 
-  res.cookie("authToken", "", cookieOptions).json({ success: true });
+  res
+    .cookie("authToken", "", cookieOptions)
+    .json({ success: true, message: "Logout successful" });
 };

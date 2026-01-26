@@ -113,6 +113,9 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
     setLoading(true);
     try {
       await signOut(auth);
+      // clear auth token
+      await axiosPublic.post("/auth/logout", {}, { withCredentials: true });
+
       toast.success("Logout successful!");
     } catch (error) {
       setLoading(true);
@@ -159,7 +162,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
         setLoading(false);
       }
     } catch (error) {
-      console.log(error);
       if (error instanceof Error) {
         console.log(error.message);
       }
@@ -184,10 +186,20 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
   //? onAuthStateChanged
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         setLoading(false);
+        // generate auth token
+        await axiosPublic.post(
+          "/auth/login",
+          {
+            user: { email: currentUser.email },
+          },
+          {
+            withCredentials: true,
+          },
+        );
       } else {
         setUser(null);
         setLoading(true);
