@@ -4,7 +4,7 @@ export const generateAuthToken = async (req, res) => {
   const { user } = request.body;
 
   const authToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "4d",
+    expiresIn: "5d",
   });
 
   res
@@ -12,7 +12,18 @@ export const generateAuthToken = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-      maxAge: 3600000,
+      maxAge: 5 * 24 * 60 * 60 * 1000,
     })
     .send({ success: true });
+};
+
+export const clearAuthTokenCookie = async (req, res) => {
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    maxAge: 0,
+  };
+
+  res.cookie("authToken", "", cookieOptions).send({ success: true });
 };
