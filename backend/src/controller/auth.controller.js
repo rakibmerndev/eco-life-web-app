@@ -17,7 +17,7 @@ export const generateAuthToken = async (req, res) => {
     .send({ success: true });
 };
 
-export const clearAuthTokenCookie = async (req, res) => {
+export const clearAuthToken = async (req, res) => {
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

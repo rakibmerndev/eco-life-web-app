@@ -5,6 +5,7 @@ import express from "express";
 import orderRoute from "./routes/order.route.js";
 import productRoute from "./routes/product.route.js";
 import userRoute from "./routes/user.route.js";
+import authRoute from "./routes/auth.route.js"
 import { connectDB } from "./lib/db.js";
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/orders", orderRoute);
+app.use('/api/auth', authRoute)
 
 app.get("/", (req, res) => {
   res.send("Server is up and running!");
