@@ -1,4 +1,5 @@
-import { ProductProps } from "../../dev-data/featuredProductData";
+
+import { ProductProps } from "../../pages/Shop/Shop";
 import Button from "../Button/Button";
 
 type ProductCardProps = {
