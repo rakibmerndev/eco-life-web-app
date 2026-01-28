@@ -5,7 +5,7 @@ import {
   getFeaturedProducts,
   getSingleProduct,
 
-} from "../controller/product.controller.js";
+} from "../controllers/product.controller.js";
 
 const router = Router();
 

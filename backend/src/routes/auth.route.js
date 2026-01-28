@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   clearAuthToken,
   generateAuthToken,
-} from "../controller/auth.controller.js";
+} from "../controllers/auth.controller.js";
 
 const router = Router();
 

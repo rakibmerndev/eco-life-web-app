@@ -3,9 +3,9 @@ import {
   createProduct,
   deleteProductById,
   updateProduct,
-} from "../controller/product.controller.js";
-import { verifyToken } from "../middleware/verifyToken.js";
-import { verifyAdmin } from "../middleware/verifyAdmin.js";
+} from "../controllers/product.controller.js";
+import { verifyAdmin, verifyToken } from "../middleware/auth.middleware.js";
+
 const router = Router();
 
 router.get("/", verifyToken, verifyAdmin, (req, res) => {
