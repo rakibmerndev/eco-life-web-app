@@ -80,7 +80,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
         toast.success("Verification email sent!");
       }
     } catch (error) {
-      setLoading(true);
+      setLoading(false);
       if (error instanceof Error) {
         if (error.message === "Firebase: Error (auth/email-already-in-use).") {
           toast.error("Email already in use!");
@@ -98,7 +98,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
       setLoading(false);
       toast.success("Login successful!");
     } catch (error) {
-      setLoading(true);
+      setLoading(false);
       if (error instanceof Error) {
         if (error.message === "Firebase: Error (auth/invalid-credential).") {
           toast.error("invalid credential!");
@@ -118,7 +118,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
 
       toast.success("Logout successful!");
     } catch (error) {
-      setLoading(true);
+      setLoading(false);
       if (error instanceof Error) {
         console.log(error.message);
       }
