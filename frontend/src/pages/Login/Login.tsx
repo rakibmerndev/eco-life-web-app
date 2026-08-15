@@ -1,18 +1,13 @@
 import { FC } from "react";
-import useAuth from "../../hooks/useAuth";
+import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import RfContainer from "../../components/Containers/RfContainer";
-import { FaGoogle } from "react-icons/fa";
+import useAuth from "../../hooks/useAuth";
 
 const Login: FC = (): JSX.Element => {
   const { signInUser, googleSignIn } = useAuth();
 
   const navigate = useNavigate();
-
-  const handleGoogleLogin = async () => {
-    await googleSignIn();
-    navigate("/");
-  };
 
   const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -90,7 +85,7 @@ const Login: FC = (): JSX.Element => {
           <div className="text-center mt-4">
             <p className="mb-2 font-semibold text-sm">Or</p>
             <button
-              onClick={handleGoogleLogin}
+              onClick={googleSignIn}
               className="flex justify-center items-center gap-2 w-full font-semibold mb-4 text-sm  rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white py-2 transition duration-300 ease-in-out"
             >
               <span>Log in with</span> <FaGoogle />
