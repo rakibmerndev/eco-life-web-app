@@ -1,9 +1,17 @@
-import { FC } from "react";
+import { FC, useRef } from "react";
+import toast from "react-hot-toast";
 import { FaPhone } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 
 const Contact: FC = (): JSX.Element => {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const clearFormMessage = () => {
+    toast.success("Message sent successfully! 🎉");
+    formRef.current?.reset();
+  };
+
   return (
     <section className="relative mt-10 mb-20 min-h-[calc(100vh-500px)] flex items-center">
       {/* Left decorative image */}
@@ -44,7 +52,11 @@ const Contact: FC = (): JSX.Element => {
 
             {/* Right form */}
             <div className="md:w-1/2">
-              <form className="space-y-4">
+              <form
+                ref={formRef}
+                onSubmit={clearFormMessage}
+                className="space-y-4"
+              >
                 <input
                   type="text"
                   placeholder="Your Name"
@@ -61,12 +73,7 @@ const Contact: FC = (): JSX.Element => {
                   className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
                 ></textarea>
 
-                <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                    e.preventDefault()
-                  }
-                  className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
-                >
+                <button className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
                   Send Message
                 </button>
               </form>
