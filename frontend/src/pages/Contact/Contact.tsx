@@ -1,4 +1,4 @@
-import { FC, useRef, React } from "react";
+import { FC, useRef } from "react";
 import toast from "react-hot-toast";
 import { FaPhone } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
