@@ -13,7 +13,7 @@ const Login: FC = (): JSX.Element => {
     e.preventDefault();
     const email = e.currentTarget.email.value;
     const password = e.currentTarget.password.value;
-    await signInUser(email, password);
+    signInUser(email, password);
 
     navigate("/");
   };

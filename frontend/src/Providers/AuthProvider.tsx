@@ -162,6 +162,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
         setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       if (error instanceof Error) {
         console.log(error.message);
       }
@@ -202,7 +203,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
         );
       } else {
         setUser(null);
-        setLoading(true);
+        setLoading(false);
       }
     });
 
