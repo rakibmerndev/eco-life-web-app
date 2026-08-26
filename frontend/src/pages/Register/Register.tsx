@@ -1,5 +1,5 @@
 import { FC } from "react";
-import RfContainer from "../../components/Containers/RfContainer";
+import { MdEmail, MdLock, MdPerson } from "react-icons/md";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 
@@ -16,81 +16,138 @@ const Register: FC = (): JSX.Element => {
   };
 
   return (
-    <RfContainer>
-      <div>
-        <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30  relative">
-          <h1 className="text-4xl text-white font-bold text-center mb-6">
-           Signup
-          </h1>
-          <form onSubmit={(e) => handleSubmit(e)}>
-            <div className="relative my-10">
+    <section className="bg-[#D6F7E7] min-h-screen flex items-center justify-center py-12 px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl border-2 border-primary-color shadow-md p-8 md:p-12">
+        <h1 className="font-playFairDisplay text-primary-color font-bold text-4xl text-center mb-2">
+          Join EcoLife
+        </h1>
+        <p className="text-center text-secondary-color mb-8">
+          Create your account and start your sustainable journey
+        </p>
+
+        <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
+          {/* Name Input */}
+          <div className="relative">
+            <label
+              htmlFor="name"
+              className="block text-sm font-semibold text-primary-color mb-2"
+            >
+              Full Name
+            </label>
+            <div className="relative flex items-center">
+              <MdPerson className="absolute left-3 text-secondary-color text-lg" />
               <input
                 type="text"
                 name="username"
                 id="name"
-                className="block w-72 py-2 px-0 text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500  focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer"
-              required/>
-              <label
-                htmlFor="name"
-                className="absolute text-lg text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-8 "
-              >
-                Your Name
-              </label>
+                placeholder="John Doe"
+                className="w-full pl-10 pr-4 py-3 border border-secondary-color rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-transparent transition-all"
+                required
+              />
             </div>
-            <div className="relative my-10">
+          </div>
+
+          {/* Email Input */}
+          <div className="relative">
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold text-primary-color mb-2"
+            >
+              Email Address
+            </label>
+            <div className="relative flex items-center">
+              <MdEmail className="absolute left-3 text-secondary-color text-lg" />
               <input
                 type="email"
                 name="email"
                 id="email"
-                className="block w-72 py-2 px-0 text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500  focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer"
-              required/>
-              <label
-                htmlFor="email"
-                className="absolute text-lg text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-8 "
-              >
-                Email
-              </label>
+                placeholder="you@example.com"
+                className="w-full pl-10 pr-4 py-3 border border-secondary-color rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-transparent transition-all"
+                required
+              />
             </div>
-            <div className="relative my-10">
+          </div>
+
+          {/* Password Input */}
+          <div className="relative">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-primary-color mb-2"
+            >
+              Password
+            </label>
+            <div className="relative flex items-center">
+              <MdLock className="absolute left-3 text-secondary-color text-lg" />
               <input
                 type="password"
                 name="password"
                 id="password"
-                className="block w-72 py-2 px-0 text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500  focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer"
-              required/>
-              <label
-                htmlFor="password"
-                className="absolute text-lg text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-8 "
-              >
-                Password
-              </label>
+                placeholder="••••••••"
+                className="w-full pl-10 pr-4 py-3 border border-secondary-color rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-transparent transition-all"
+                required
+              />
             </div>
-            <div className="flex justify-between items-center">
-              <div className="flex gap-2 items-center">
-                <input type="checkbox" name="remember" id="remember" />
-                <label htmlFor="remember" className="text-sm">
-                  Remember Me
-                </label>
-              </div>
-              <Link to="/forgot-password" className="text-blue-500">
-                Forgot Password?
+          </div>
+
+          {/* Terms & Conditions */}
+          <div className="flex gap-2 items-start">
+            <input
+              type="checkbox"
+              name="terms"
+              id="terms"
+              className="w-4 h-4 mt-1 accent-primary-color rounded cursor-pointer"
+              required
+            />
+            <label htmlFor="terms" className="text-sm text-secondary-color cursor-pointer">
+              I agree to the{" "}
+              <Link to="#" className="text-primary-color font-semibold hover:text-green-700">
+                Terms & Conditions
               </Link>
-            </div>
-            <button
-              className="w-full font-semibold mb-4 text-sm mt-6 rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white py-2 transition duration-300 ease-in-out"
-              type="submit"
-            >
-              Signup
-            </button>
-            <div className="text-sm text-center">
-              <span>
-                Already Have Account? <Link to="/login" className="hover:text-blue-500">Login</Link>
-              </span>
-            </div>
-          </form>
+            </label>
+          </div>
+
+          {/* Signup Button */}
+          <button
+            type="submit"
+            className="w-full bg-primary-color text-white font-semibold py-3 rounded-lg hover:bg-green-700 hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg"
+          >
+            Create Account
+          </button>
+
+          {/* Login Link */}
+          <div className="text-center">
+            <span className="text-sm text-secondary-color">
+              Already have an account?{" "}
+              <Link to="/login" className="text-primary-color font-semibold hover:text-green-700 transition-colors">
+                Login
+              </Link>
+            </span>
+          </div>
+        </form>
+
+        {/* Divider */}
+        <div className="relative my-8">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-secondary-color opacity-30"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-secondary-color">Or</span>
+          </div>
+        </div>
+
+        {/* Benefits */}
+        <div className="bg-[#D6F7E7] rounded-lg p-4">
+          <p className="text-xs text-secondary-color text-center mb-3 font-semibold">
+            Why join EcoLife?
+          </p>
+          <ul className="text-xs text-secondary-color space-y-2 text-center">
+            <li>✓ Access exclusive eco-friendly products</li>
+            <li>✓ Get sustainability tips & guides</li>
+            <li>✓ Track your environmental impact</li>
+          </ul>
         </div>
       </div>
-    </RfContainer>
+    </section>
   );
 };
 
