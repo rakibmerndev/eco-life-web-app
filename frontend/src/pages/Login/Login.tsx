@@ -2,7 +2,6 @@ import { FC } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { MdEmail, MdLock } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import RfContainer from "../../components/Containers/RfContainer";
 import useAuth from "../../hooks/useAuth";
 
 const Login: FC = (): JSX.Element => {
