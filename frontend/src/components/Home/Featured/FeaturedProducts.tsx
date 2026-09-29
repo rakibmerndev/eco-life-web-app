@@ -1,25 +1,23 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import Header from "../../shared/Header/Header";
 
-import ProductCard from "../../ProductCard/ProductCard";
-import { ProductProps } from "../../../pages/Shop/Shop";
+import { useQuery } from "@tanstack/react-query";
 import { axiosPublic } from "../../../api/axiosPublic";
+import { ProductProps } from "../../../pages/Shop/Shop";
+import ProductCard from "../../ProductCard/ProductCard";
 
 const FeaturedProducts: FC = (): JSX.Element => {
-  const [products, setProducts] = useState<ProductProps[]>();
+  const { data: products, isLoading } = useQuery({
+    queryKey: ["featured-products"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/products/featured");
+      return res.data;
+    },
+  });
 
-  useEffect(() => {
-    const getFeaturedProducts = async () => {
-      try {
-        const response = await axiosPublic.get("/products/featured");
-        setProducts(response.data);
-      } catch (error) {
-        console.error("Error fetching featured products:", error);
-      }
-    };
-
-    getFeaturedProducts();
-  }, []);
+  if (isLoading) {
+    return <div>Loading....</div>;
+  }
 
   return (
     <section className="relative mt-16">

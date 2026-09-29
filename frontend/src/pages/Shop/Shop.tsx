@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import ProductCard from "../../components/ProductCard/ProductCard";
+import { useQuery } from "@tanstack/react-query";
 import { axiosPublic } from "../../api/axiosPublic";
+import ProductCard from "../../components/ProductCard/ProductCard";
 
 export interface ProductProps {
   id: string | number;
@@ -12,20 +12,17 @@ export interface ProductProps {
 }
 
 const Shop = () => {
-  const [data, setData] = useState<ProductProps[]>();
+  const { data, isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/products");
+      return res.data;
+    },
+  });
 
-  useEffect(() => {
-    const fetchProductsData = async () => {
-      try {
-        const res = await axiosPublic.get("/products");
-        setData(res.data);
-      } catch (error) {
-        console.log("Error fetching Products data", error);
-      }
-    };
-
-    fetchProductsData();
-  }, []);
+  if (isLoading) {
+    return <div>Loading....</div>;
+  }
 
   return (
     <div className="min-h-svh">

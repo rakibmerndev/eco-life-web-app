@@ -80,7 +80,10 @@ const Login: FC = (): JSX.Element => {
                 id="remember"
                 className="w-4 h-4 accent-primary-color rounded cursor-pointer"
               />
-              <label htmlFor="remember" className="text-sm text-secondary-color cursor-pointer">
+              <label
+                htmlFor="remember"
+                className="text-sm text-secondary-color cursor-pointer"
+              >
                 Remember me
               </label>
             </div>
@@ -104,7 +107,10 @@ const Login: FC = (): JSX.Element => {
           <div className="text-center">
             <span className="text-sm text-secondary-color">
               New to EcoLife?{" "}
-              <Link to="/signup" className="text-primary-color font-semibold hover:text-green-700 transition-colors">
+              <Link
+                to="/signup"
+                className="text-primary-color font-semibold hover:text-green-700 transition-colors"
+              >
                 Create an account
               </Link>
             </span>
@@ -117,7 +123,9 @@ const Login: FC = (): JSX.Element => {
             <div className="w-full border-t border-secondary-color opacity-30"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-secondary-color">Or continue with</span>
+            <span className="px-2 bg-white text-secondary-color">
+              Or continue with
+            </span>
           </div>
         </div>
 

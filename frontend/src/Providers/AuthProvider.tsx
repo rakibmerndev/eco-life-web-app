@@ -192,15 +192,18 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }): JSX.Element => {
         setUser(currentUser);
         setLoading(false);
         // generate auth token
-        await axiosPublic.post(
-          "/auth/login",
-          {
-            user: { email: currentUser.email },
-          },
-          {
-            withCredentials: true,
-          },
-        );
+        const hasToken = document.cookie.includes("authToken");
+        if (!hasToken) {
+          await axiosPublic.post(
+            "/auth/login",
+            {
+              user: { email: currentUser.email },
+            },
+            {
+              withCredentials: true,
+            },
+          );
+        }
       } else {
         setUser(null);
         setLoading(false);
