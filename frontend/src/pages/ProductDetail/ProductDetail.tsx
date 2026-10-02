@@ -37,6 +37,8 @@ const ProductDetail = () => {
     console.log("Adding to cart:", { productId: data?._id, quantity });
   };
 
+  const averageRating = "4";
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
@@ -83,7 +85,7 @@ const ProductDetail = () => {
                   ))}
                 </div>
                 <span className="text-sm text-gray-600 font-openSans">
-                  {averageRating} ({FAKE_REVIEWS.length} reviews)
+                  {averageRating} ({data?.reviewsNumber} reviews)
                 </span>
               </div>
             </div>
