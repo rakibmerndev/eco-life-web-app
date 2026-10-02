@@ -49,7 +49,7 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
 
         {/* Button always at bottom */}
         <Link to={`/shop/${product?._id}`} className="mt-4 flex justify-center">
-          <Button value="Buy Now" />
+          <Button value="Details" />
         </Link>
       </div>
     </div>

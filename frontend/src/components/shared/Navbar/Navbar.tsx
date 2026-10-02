@@ -11,14 +11,20 @@ import Container from "@mui/material/Container";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { FaShoppingBag, FaUserCircle } from "react-icons/fa";
 import "./styles/Navbar.css";
-import useAuth from "../../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
+
 
 const Navbar = () => {
   const { user, signOutUser } = useAuth();
+  const navigate = useNavigate()
+
+  const handleClick = () =>{
+    navigate('/cart')
+  }
 
   const pages = [
     {
@@ -94,7 +100,6 @@ const Navbar = () => {
         >
           <Link to="/">
             <h1 className="hidden md:flex font-dancingScript text-[#039671] text-5xl mr-3 font-bold">
-              {" "}
               EcoLife
             </h1>
           </Link>
@@ -138,7 +143,6 @@ const Navbar = () => {
 
           <Link to="/">
             <h1 className="xs:flex md:hidden text-center font-dancingScript text-[#039671] text-5xl font-bold">
-              {" "}
               EcoLife
             </h1>
           </Link>
@@ -167,6 +171,7 @@ const Navbar = () => {
             <div className="w-1/2 mx-auto flex justify-center items-center gap-2">
               <Tooltip title="">
                 <IconButton
+                  onClick={handleClick}
                   disableFocusRipple
                   disableRipple
                   disableTouchRipple

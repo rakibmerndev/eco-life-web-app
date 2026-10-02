@@ -1,7 +1,8 @@
 import { FC } from "react";
 import { MdEmail, MdLock, MdPerson } from "react-icons/md";
 import { Link } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
+
 
 const Register: FC = (): JSX.Element => {
   const { createUser, updateUser } = useAuth();

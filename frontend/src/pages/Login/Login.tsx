@@ -2,7 +2,8 @@ import { FC } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { MdEmail, MdLock } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
+
 
 const Login: FC = (): JSX.Element => {
   const { signInUser, googleSignIn } = useAuth();
