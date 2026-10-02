@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ProductProps } from "../../pages/Shop/Shop";
 import Button from "../Button/Button";
 
@@ -14,7 +15,7 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
       <div className="w-full h-[180px] sm:h-[220px] md:h-[260px] lg:h-[300px] flex-shrink-0">
         <img
           src={product?.image}
-          alt="product-image"
+          alt={product.name + ".img"}
           className="w-full h-full object-cover hover:scale-105 duration-300 transition-all"
         />
       </div>
@@ -47,9 +48,9 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
         </div>
 
         {/* Button always at bottom */}
-        <div className="mt-4 flex justify-center">
+        <Link to={`/shop/${product?._id}`} className="mt-4 flex justify-center">
           <Button value="Buy Now" />
-        </div>
+        </Link>
       </div>
     </div>
   );

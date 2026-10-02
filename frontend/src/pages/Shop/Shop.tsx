@@ -3,7 +3,7 @@ import { axiosPublic } from "../../api/axiosPublic";
 import ProductCard from "../../components/ProductCard/ProductCard";
 
 export interface ProductProps {
-  id: string | number;
+  _id: string | number;
   name: string;
   discountedPrice: number;
   price: number;
