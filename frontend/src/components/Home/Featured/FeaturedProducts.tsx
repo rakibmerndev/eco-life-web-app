@@ -46,7 +46,7 @@ const FeaturedProducts: FC = (): JSX.Element => {
       {/* main content */}
       <div className="mt-28 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-16 p-5 xl:p-8">
         {products?.map((product: ProductProps) => (
-          <ProductCard key={product?.id} product={product} />
+          <ProductCard key={product?._id} product={product} />
         ))}
       </div>
     </section>
