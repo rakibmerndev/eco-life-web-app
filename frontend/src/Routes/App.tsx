@@ -10,6 +10,7 @@ import Login from "../pages/Login/Login.tsx";
 import ProductDetail from "../pages/ProductDetail/ProductDetail.tsx";
 import Register from "../pages/Register/Register.tsx";
 import Shop from "../pages/Shop/Shop.tsx";
+import Cart from "../pages/Cart/Cart.tsx";
 
 const App = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const App = createBrowserRouter([
       {
         path: "/shop/:id",
         element: <ProductDetail />,
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
       },
       {
         path: "/blogs",

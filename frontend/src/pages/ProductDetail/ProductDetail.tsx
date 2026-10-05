@@ -2,13 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FaMinus, FaPlus, FaShoppingCart, FaStar } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import { axiosPublic } from "../../api/axiosPublic";
 import MainButton from "../../components/Button/MainButton";
 import { ProductProps } from "../Shop/Shop";
+import { useCart } from "../../hooks/useCart";
 
 const ProductDetail = () => {
   const params = useParams();
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
 
   const { data, isLoading } = useQuery<ProductProps>({
     queryKey: ["product-detail", params.id],
@@ -33,8 +36,19 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    // TODO: Implement cart functionality
-    console.log("Adding to cart:", { productId: data?._id, quantity });
+    if (!data) return;
+
+    const cartItem = {
+      productId: String(data._id),
+      quantity,
+      name: data.name,
+      price: data.price,
+      discountedPrice: data.discountedPrice,
+      image: data.image,
+    };
+
+    addToCart(cartItem);
+    toast.success(`${data.name} added to cart!`);
   };
 
   const averageRating = "4";
@@ -162,7 +176,6 @@ const ProductDetail = () => {
                 <FaShoppingCart size={18} />
                 Add to Cart
               </button>
-              <MainButton value="Buy Now" classes="flex-1 py-3 px-6" />
             </div>
           </div>
         </div>
