@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Root from "../Layout/Root.tsx";
 import About from "../pages/About/About.tsx";
 import Blogs from "../pages/Blogs/Blogs.tsx";
+import Cart from "../pages/Cart/Cart.tsx";
+import Checkout from "../pages/Checkout/Checkout.tsx";
 import Contact from "../pages/Contact/Contact.tsx";
 import { ErrorPage } from "../pages/ErrorPage/ErrorPage.tsx";
 import ForgetPassword from "../pages/ForgetPassword/ForgetPassword.tsx";
@@ -10,7 +12,7 @@ import Login from "../pages/Login/Login.tsx";
 import ProductDetail from "../pages/ProductDetail/ProductDetail.tsx";
 import Register from "../pages/Register/Register.tsx";
 import Shop from "../pages/Shop/Shop.tsx";
-import Cart from "../pages/Cart/Cart.tsx";
+import OrderSuccess from "../pages/OrderSuccess/OrderSuccess.tsx";
 
 const App = createBrowserRouter([
   {
@@ -57,6 +59,14 @@ const App = createBrowserRouter([
       {
         path: "/about",
         element: <About />,
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />,
+      },
+      {
+        path: "/order-success",
+        element: <OrderSuccess />,
       },
     ],
   },

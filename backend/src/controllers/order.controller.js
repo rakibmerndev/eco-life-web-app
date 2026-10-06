@@ -1,20 +1,41 @@
 import { Order } from "../models/order.model.js";
+import { User } from "../models/user.model.js";
 
 export const createOrder = async (req, res) => {
-  const { userId, products, totalPrice, orderStatus, paymentStatus } = req.body;
+  const {
+    userEmail,
+    products,
+    totalPrice,
+    orderStatus,
+    paymentStatus,
+    shippingAddress,
+  } = req.body;
 
   try {
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
+
     const newOrder = new Order({
-      userId,
+      userId: user._id,
       products,
       totalPrice,
+      shippingAddress,
       orderStatus,
       paymentStatus,
     });
 
+    console.log("Order object created, saving to DB...");
     const savedOrder = await newOrder.save();
+    console.log("Order saved successfully:", savedOrder);
     res.status(201).json(savedOrder);
   } catch (error) {
+    console.error("ERROR in createOrder:", error);
+    console.error("Error stack:", error.stack);
     res
       .status(500)
       .json({ message: "Failed to create order", error: error.message });

@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaMinus, FaPlus, FaShoppingCart, FaStar } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
-import toast from "react-hot-toast";
 import { axiosPublic } from "../../api/axiosPublic";
-import MainButton from "../../components/Button/MainButton";
-import { ProductProps } from "../Shop/Shop";
+
 import { useCart } from "../../hooks/useCart";
+import { ProductProps } from "../Shop/Shop";
 
 const ProductDetail = () => {
   const params = useParams();
