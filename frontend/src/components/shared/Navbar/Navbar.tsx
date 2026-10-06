@@ -1,30 +1,31 @@
-import * as React from "react";
+import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
 // import Avatar from "@mui/material/Avatar";
+import { MenuItem } from "@mui/material";
+import Badge from "@mui/material/Badge";
 import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-
-import { Link, useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 import { FaShoppingBag, FaUserCircle } from "react-icons/fa";
-import "./styles/Navbar.css";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
-
+import { useCart } from "../../../hooks/useCart";
+import "./styles/Navbar.css";
 
 const Navbar = () => {
   const { user, signOutUser } = useAuth();
-  const navigate = useNavigate()
+  const { getCartItemCount } = useCart();
+  const navigate = useNavigate();
+  const cartItemCount = getCartItemCount();
 
-  const handleClick = () =>{
-    navigate('/cart')
-  }
+  const handleClick = () => {
+    navigate("/cart");
+  };
 
   const pages = [
     {
@@ -61,10 +62,10 @@ const Navbar = () => {
   };
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
+    null,
   );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
+    null,
   );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -178,8 +179,9 @@ const Navbar = () => {
                   className="flex justify-center items-center gap-2"
                   sx={{ p: 0 }}
                 >
-                  <FaShoppingBag className="text-primary-color" />
-                  {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+                  <Badge badgeContent={cartItemCount} color="error">
+                    <FaShoppingBag className="text-primary-color" />
+                  </Badge>
                 </IconButton>
               </Tooltip>
               <Tooltip title="">
@@ -226,12 +228,17 @@ const Navbar = () => {
                         </Typography>
                       </Link>
                     </MenuItem>
-                  ) : null
+                  ) : null,
                 )
               ) : (
                 <MenuItem>
                   <Link to="/login">
-                    <Typography onClick={handleCloseUserMenu} textAlign="center">Login</Typography>
+                    <Typography
+                      onClick={handleCloseUserMenu}
+                      textAlign="center"
+                    >
+                      Login
+                    </Typography>
                   </Link>
                 </MenuItem>
               )}
