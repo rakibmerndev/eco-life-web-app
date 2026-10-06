@@ -39,13 +39,6 @@ const Checkout: FC = (): JSX.Element => {
     }
   }, [user?.email, user?.displayName]);
 
-  // Redirect to cart if empty
-  useEffect(() => {
-    if (cart.length === 0 && !isLoading) {
-      navigate("/cart");
-    }
-  }, [cart.length, isLoading, navigate]);
-
   if (authLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -142,13 +135,13 @@ const Checkout: FC = (): JSX.Element => {
       if (response.status === 201) {
         toast.success("Order placed successfully!");
 
-        clearCart();
+        navigate("/order-success", {
+          state: { orderId: response.data._id },
+        });
 
         setTimeout(() => {
-          navigate("/order-success", {
-            state: { orderId: response.data._id },
-          });
-        }, 1500);
+          clearCart();
+        }, 500);
       }
     } catch (error) {
       console.error("Order placement failed:", error);
