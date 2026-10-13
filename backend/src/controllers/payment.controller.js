@@ -25,9 +25,9 @@ export const handleCheckout = async (req, res) => {
 
         return {
           price_data: {
-            currency: "bdt",
+            currency: "usd",
             product_data: { name: storedItem.name, images: [storedItem.image] },
-            unit_amount: Math.round(storedItem.price * 100),
+            unit_amount: Math.round(item.discountedPrice * 100),
           },
           quantity: item.quantity,
         };
