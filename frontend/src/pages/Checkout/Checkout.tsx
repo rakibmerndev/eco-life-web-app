@@ -1,18 +1,9 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { axiosPublic } from "../../api/axiosPublic";
 import { useAuth } from "../../hooks/useAuth";
 import { useCart } from "../../hooks/useCart";
-
-interface ShippingFormData {
-  fullName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  postalCode: string;
-}
 
 const Checkout: FC = (): JSX.Element => {
   const navigate = useNavigate();
@@ -20,24 +11,24 @@ const Checkout: FC = (): JSX.Element => {
   const { user, loading: authLoading } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<ShippingFormData>({
-    fullName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    postalCode: "",
-  });
+
+  const fullNameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const postalCodeRef = useRef<HTMLInputElement>(null);
+  const cityRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (user && (!formData.email || !formData.fullName)) {
-      setFormData((prev) => ({
-        ...prev,
-        email: user.email || prev.email,
-        fullName: user.displayName || prev.fullName,
-      }));
+    if (user) {
+      if (emailRef.current && user.email) {
+        emailRef.current.value = user.email;
+      }
+      if (fullNameRef.current && user.displayName) {
+        fullNameRef.current.value = user.displayName;
+      }
     }
-  }, [user?.email, user?.displayName]);
+  }, [user]);
 
   if (authLoading) {
     return (
@@ -71,40 +62,18 @@ const Checkout: FC = (): JSX.Element => {
     );
   }
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const validateForm = (): boolean => {
-    if (
-      !formData.fullName ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.address ||
-      !formData.city ||
-      !formData.postalCode
-    ) {
-      toast.error("Please fill in all fields");
-      return false;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast.error("Please enter a valid email");
-      return false;
-    }
-
-    return true;
-  };
-
   const handlePlaceOrder = async () => {
-    if (!validateForm()) return;
+    const fullName = fullNameRef.current?.value.trim();
+    const email = emailRef.current?.value.trim();
+    const phone = phoneRef.current?.value.trim();
+    const address = addressRef.current?.value.trim();
+    const city = cityRef.current?.value.trim();
+    const postalCode = postalCodeRef.current?.value.trim();
+
+    if (!fullName || !email || !phone || !address || !city || !postalCode) {
+      toast.error("Please fill in all fields");
+      return;
+    }
 
     setIsLoading(true);
 
@@ -171,11 +140,9 @@ const Checkout: FC = (): JSX.Element => {
                       Full Name *
                     </label>
                     <input
+                      ref={fullNameRef}
                       type="text"
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      placeholder="John Doe"
+                      placeholder="e.g., Sarah Ahmed"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
                   </div>
@@ -186,11 +153,9 @@ const Checkout: FC = (): JSX.Element => {
                       Email *
                     </label>
                     <input
+                      ref={emailRef}
                       type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="john@example.com"
+                      placeholder="e.g., sarah.ahmed@mail.com"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
                   </div>
@@ -201,11 +166,9 @@ const Checkout: FC = (): JSX.Element => {
                       Phone Number *
                     </label>
                     <input
+                      ref={phoneRef}
                       type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      placeholder="+88 01234 567890"
+                      placeholder="e.g., +880 1712 345678"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
                   </div>
@@ -216,11 +179,9 @@ const Checkout: FC = (): JSX.Element => {
                       Postal Code *
                     </label>
                     <input
+                      ref={postalCodeRef}
                       type="text"
-                      name="postalCode"
-                      value={formData.postalCode}
-                      onChange={handleInputChange}
-                      placeholder="1200"
+                      placeholder="e.g., 1212"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
                   </div>
@@ -231,11 +192,9 @@ const Checkout: FC = (): JSX.Element => {
                       City *
                     </label>
                     <input
+                      ref={cityRef}
                       type="text"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      placeholder="Dhaka"
+                      placeholder="e.g., Dhaka, Chittagong"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
                   </div>
@@ -246,10 +205,8 @@ const Checkout: FC = (): JSX.Element => {
                       Street Address *
                     </label>
                     <textarea
-                      name="address"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      placeholder="123 Main Street, Apt 4B"
+                      ref={addressRef}
+                      placeholder="e.g., 45 Green Lane, Building B, Apartment 302"
                       rows={3}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
@@ -285,7 +242,7 @@ const Checkout: FC = (): JSX.Element => {
                         </div>
                       </div>
                       <p className="font-semibold text-primary-color font-openSans">
-                        {item.discountedPrice * item.quantity} Tk.
+                        {item.discountedPrice * item.quantity} $.
                       </p>
                     </div>
                   ))}
@@ -305,7 +262,7 @@ const Checkout: FC = (): JSX.Element => {
               <div className="space-y-3 mb-6 pb-6 border-b border-gray-200 font-openSans">
                 <div className="flex justify-between text-gray-700">
                   <span>Items ({cart.length}):</span>
-                  <span className="font-semibold">{total} Tk.</span>
+                  <span className="font-semibold">{total} $.</span>
                 </div>
               </div>
 
@@ -314,7 +271,7 @@ const Checkout: FC = (): JSX.Element => {
                 <div className="flex justify-between items-center text-xl">
                   <span className="font-semibold text-gray-800">Total:</span>
                   <span className="font-bold text-primary-color text-2xl">
-                    {total} Tk.
+                    {total} $.
                   </span>
                 </div>
               </div>

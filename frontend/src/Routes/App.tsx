@@ -9,10 +9,10 @@ import { ErrorPage } from "../pages/ErrorPage/ErrorPage.tsx";
 import ForgetPassword from "../pages/ForgetPassword/ForgetPassword.tsx";
 import Home from "../pages/Home/Home.tsx";
 import Login from "../pages/Login/Login.tsx";
+import OrderSuccess from "../pages/OrderSuccess/OrderSuccess.tsx";
 import ProductDetail from "../pages/ProductDetail/ProductDetail.tsx";
 import Register from "../pages/Register/Register.tsx";
 import Shop from "../pages/Shop/Shop.tsx";
-import OrderSuccess from "../pages/OrderSuccess/OrderSuccess.tsx";
 
 const App = createBrowserRouter([
   {
@@ -65,7 +65,7 @@ const App = createBrowserRouter([
         element: <Checkout />,
       },
       {
-        path: "/order-success",
+        path: "/checkout-success",
         element: <OrderSuccess />,
       },
     ],

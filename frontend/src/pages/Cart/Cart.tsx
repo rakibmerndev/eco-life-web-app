@@ -1,8 +1,8 @@
 import { FC } from "react";
+import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { FaTrash, FaMinus, FaPlus } from "react-icons/fa";
-import { useCart } from "../../hooks/useCart";
 import MainButton from "../../components/Button/MainButton";
+import { useCart } from "../../hooks/useCart";
 
 const Cart: FC = (): JSX.Element => {
   const { cart, updateCart, deleteFromCart, clearCart, getCartTotal } =
@@ -74,7 +74,7 @@ const Cart: FC = (): JSX.Element => {
                             {item.name}
                           </h3>
                           <p className="text-primary-color font-bold mt-1">
-                            {item.discountedPrice} Tk.
+                            {item.discountedPrice} $.
                           </p>
                         </div>
                       </div>
@@ -96,7 +96,7 @@ const Cart: FC = (): JSX.Element => {
                             onChange={(e) =>
                               updateCart(
                                 item.productId,
-                                parseInt(e.target.value)
+                                parseInt(e.target.value),
                               )
                             }
                             className="w-12 h-8 text-center border border-gray-300 rounded font-semibold focus:outline-none focus:border-primary-color"
@@ -122,7 +122,7 @@ const Cart: FC = (): JSX.Element => {
                       <p className="text-gray-700 font-semibold text-right">
                         Subtotal:{" "}
                         <span className="text-primary-color">
-                          {item.discountedPrice * item.quantity} Tk.
+                          {item.discountedPrice * item.quantity} $.
                         </span>
                       </p>
                     </div>
@@ -149,10 +149,10 @@ const Cart: FC = (): JSX.Element => {
                       {/* Price */}
                       <div className="text-center">
                         <p className="text-primary-color font-bold">
-                          {item.discountedPrice} Tk.
+                          {item.discountedPrice} $.
                         </p>
                         <p className="text-xs text-gray-500 line-through">
-                          {item.price} Tk.
+                          {item.price} $.
                         </p>
                       </div>
 
@@ -174,7 +174,7 @@ const Cart: FC = (): JSX.Element => {
                             onChange={(e) =>
                               updateCart(
                                 item.productId,
-                                parseInt(e.target.value)
+                                parseInt(e.target.value),
                               )
                             }
                             className="w-12 h-8 text-center border border-gray-300 rounded font-semibold focus:outline-none focus:border-primary-color"
@@ -226,7 +226,7 @@ const Cart: FC = (): JSX.Element => {
               <div className="space-y-3 mb-6 pb-6 border-b border-gray-200 font-openSans">
                 <div className="flex justify-between text-gray-700">
                   <span>Subtotal:</span>
-                  <span className="font-semibold">{subtotal} Tk.</span>
+                  <span className="font-semibold">{subtotal} $.</span>
                 </div>
               </div>
 
@@ -235,7 +235,7 @@ const Cart: FC = (): JSX.Element => {
                 <div className="flex justify-between items-center text-xl">
                   <span className="font-semibold text-gray-800">Total:</span>
                   <span className="font-bold text-primary-color text-2xl">
-                    {total} Tk.
+                    {total} $.
                   </span>
                 </div>
               </div>

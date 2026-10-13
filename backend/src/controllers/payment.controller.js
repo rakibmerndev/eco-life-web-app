@@ -1,8 +1,5 @@
-import "dotenv/config";
-import Stripe from "stripe";
+import { stripe } from "../lib/stripe.js";
 import { Product } from "../models/product.model.js";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const handleCheckout = async (req, res) => {
   try {
@@ -27,7 +24,7 @@ export const handleCheckout = async (req, res) => {
           price_data: {
             currency: "usd",
             product_data: { name: storedItem.name, images: [storedItem.image] },
-            unit_amount: Math.round(item.discountedPrice * 100),
+            unit_amount: Math.round(storedItem.discountedPrice * 100),
           },
           quantity: item.quantity,
         };
@@ -37,8 +34,8 @@ export const handleCheckout = async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items,
-      success_url: `${process.env.Client_URL}/order-success`,
-      cancel_url: `${process.env.Client_URL}/cart`,
+      success_url: `${process.env.CLIENT_URL}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL}/cart`,
     });
 
     res.json({ url: session.url });
@@ -46,4 +43,14 @@ export const handleCheckout = async (req, res) => {
     console.log("error in stripe", error.message);
     res.status(500).json({ error: error.message });
   }
+};
+
+export const handleCheckoutSuccess = async (req, res) => {
+  const { sessionId } = req.body;
+
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+  console.log(session);
+
+  res.json({ message: "got the session id", session });
 };

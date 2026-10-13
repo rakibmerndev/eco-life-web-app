@@ -1,11 +1,46 @@
-import { FC } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { FC, useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { axiosPublic } from "../../api/axiosPublic";
 import MainButton from "../../components/Button/MainButton";
+import { useCart } from "../../hooks/useCart";
 
 const OrderSuccess: FC = (): JSX.Element => {
-  const location = useLocation();
-  const orderId = location.state?.orderId || "N/A";
+  const { clearCart } = useCart();
+  const [isProcessing, setIsProcessing] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const handleCheckoutSuccess = async (sessionId: string | null) => {
+      try {
+        const res = await axiosPublic.post("/payment/checkout-success", {
+          sessionId,
+        });
+        console.log(res.data);
+
+        clearCart();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    const sessionId = new URLSearchParams(window.location.search).get(
+      "session_id",
+    );
+
+    if (sessionId) {
+      handleCheckoutSuccess(sessionId);
+    } else {
+      setIsProcessing(false);
+      setError("No session ID found in the URL");
+    }
+  }, []);
+
+  if (isProcessing) return <p>Processing....</p>;
+
+  if (error) return <div>{`Error: ${error}`}</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 flex items-center justify-center">
@@ -26,9 +61,7 @@ const OrderSuccess: FC = (): JSX.Element => {
         {/* Order ID */}
         <div className="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
           <p className="text-gray-600 font-openSans mb-2">Order ID</p>
-          <p className="text-2xl font-bold text-primary-color font-openSans break-all">
-            {orderId}
-          </p>
+          <p className="text-2xl font-bold text-primary-color font-openSans break-all"></p>
         </div>
 
         {/* Info Box */}
@@ -39,7 +72,9 @@ const OrderSuccess: FC = (): JSX.Element => {
           <ul className="text-left space-y-2 font-openSans text-gray-700">
             <li className="flex items-start gap-2">
               <span className="text-primary-color mt-1">✓</span>
-              <span>A confirmation email has been sent to your email address</span>
+              <span>
+                A confirmation email has been sent to your email address
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary-color mt-1">✓</span>

@@ -1,23 +1,24 @@
+import "dotenv/config";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import dotenv from "dotenv";
 import express from "express";
 
 import { connectDB } from "./lib/db.js";
 import adminRoute from "./routes/admin.route.js";
 import authRoute from "./routes/auth.route.js";
 import orderRoute from "./routes/order.route.js";
+import paymentRoute from "./routes/payment.route.js";
 import productRoute from "./routes/product.route.js";
 import userRoute from "./routes/user.route.js";
-import paymentRoute from "./routes/payment.route.js";
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
-const allowedOrigins =  ["http://localhost:5173", "https://eco-life-web-app.vercel.app"]
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://eco-life-web-app.vercel.app",
+];
 
 app.use(
   cors({
@@ -28,7 +29,6 @@ app.use(
     maxAge: 3600,
   }),
 );
-
 
 app.use(cookieParser());
 

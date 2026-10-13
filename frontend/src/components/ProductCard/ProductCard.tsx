@@ -32,10 +32,10 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
           <div className="flex justify-between items-center">
             <div className="flex gap-2 items-center">
               <p className="text-sm sm:text-base md:text-lg font-extrabold">
-                {product?.discountedPrice} Tk.
+                {product?.discountedPrice} $.
               </p>
               <p className="text-xs sm:text-sm md:text-base font-bold line-through text-gray-400">
-                {product?.price} Tk.
+                {product?.price} $.
               </p>
             </div>
             <a

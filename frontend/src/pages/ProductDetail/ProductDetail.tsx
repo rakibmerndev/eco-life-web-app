@@ -108,10 +108,10 @@ const ProductDetail = () => {
             <div className="border-b border-gray-200 pb-6">
               <div className="flex items-end gap-3 mb-2">
                 <span className="text-3xl font-bold text-primary-color">
-                  {data?.discountedPrice} Tk.
+                  {data?.discountedPrice} $.
                 </span>
                 <span className="text-lg text-gray-400 line-through">
-                  {data?.price} Tk.
+                  {data?.price} $.
                 </span>
               </div>
               <div className="text-sm text-green-600 font-semibold">
