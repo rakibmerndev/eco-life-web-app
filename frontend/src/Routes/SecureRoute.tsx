@@ -1,4 +1,5 @@
 import { FC, ReactNode } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 
@@ -8,6 +9,8 @@ interface SecureRouteProps {
 
 const SecureRoute: FC<SecureRouteProps> = ({ children }): JSX.Element => {
   const { loading, user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   if (loading)
     return (
@@ -19,7 +22,8 @@ const SecureRoute: FC<SecureRouteProps> = ({ children }): JSX.Element => {
       </div>
     );
   if (!user) {
-    return <p>Unauthorized</p>;
+    navigate("/login", { state: { from: location } });
+    return null;
   }
 
   return <>{children}</>;

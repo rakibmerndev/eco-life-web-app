@@ -14,7 +14,7 @@ export const handleCheckout = async (req, res) => {
 
     const line_items = await Promise.all(
       products.map(async (item) => {
-        const storedItem = await Product.findById(item.productId);
+        const storedItem = await Product.findById(item.productId).lean();
 
         if (!storedItem) {
           throw new Error(`Product not found: ${item.productId}`);

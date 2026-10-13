@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { MdEmail, MdLock } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 
@@ -9,6 +9,17 @@ const Login: FC = (): JSX.Element => {
   const { signInUser, googleSignIn } = useAuth();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = (location.state as { from?: { pathname: string; search: string } })?.from;
+
+  const handleRedirectAfterLogin = () => {
+    if (from?.pathname) {
+      navigate(from.pathname + from.search);
+    } else {
+      navigate("/");
+    }
+  };
 
   const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,7 +27,12 @@ const Login: FC = (): JSX.Element => {
     const password = e.currentTarget.password.value;
     signInUser(email, password);
 
-    navigate("/");
+    setTimeout(handleRedirectAfterLogin, 500);
+  };
+
+  const handleGoogleLogin = async () => {
+    googleSignIn();
+    setTimeout(handleRedirectAfterLogin, 500);
   };
 
   return (
@@ -132,7 +148,7 @@ const Login: FC = (): JSX.Element => {
 
         {/* Google Login Button */}
         <button
-          onClick={googleSignIn}
+          onClick={handleGoogleLogin}
           className="w-full flex justify-center items-center gap-3 bg-white border-2 border-primary-color text-primary-color font-semibold py-3 rounded-lg hover:bg-[#D6F7E7] hover:scale-105 transition-all duration-300"
         >
           <FaGoogle className="text-lg" />
