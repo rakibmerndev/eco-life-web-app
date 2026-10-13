@@ -16,7 +16,7 @@ interface ShippingFormData {
 
 const Checkout: FC = (): JSX.Element => {
   const navigate = useNavigate();
-  const { cart, getCartTotal, clearCart } = useCart();
+  const { cart, getCartTotal } = useCart();
   const { user, loading: authLoading } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -110,38 +110,24 @@ const Checkout: FC = (): JSX.Element => {
 
     try {
       const orderData = {
-        userEmail: user?.email,
         products: cart.map((item) => ({
           productId: item.productId,
           quantity: item.quantity,
         })),
-        totalPrice: getCartTotal(),
-        shippingAddress: {
-          fullName: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          city: formData.city,
-          postalCode: formData.postalCode,
-        },
-        orderStatus: "pending",
-        paymentStatus: "pending",
       };
 
-      const response = await axiosPublic.post("/orders", orderData, {
-        withCredentials: true,
-      });
+      const response = await axiosPublic.post(
+        "/payment/create-checkout-session",
+        orderData,
+        {
+          withCredentials: true,
+        },
+      );
 
-      if (response.status === 201) {
-        toast.success("Order placed successfully!");
-
-        navigate("/order-success", {
-          state: { orderId: response.data._id },
-        });
-
-        setTimeout(() => {
-          clearCart();
-        }, 500);
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      } else {
+        toast.error("Failed to start checkout");
       }
     } catch (error) {
       console.error("Order placement failed:", error);

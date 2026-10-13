@@ -9,6 +9,7 @@ import authRoute from "./routes/auth.route.js";
 import orderRoute from "./routes/order.route.js";
 import productRoute from "./routes/product.route.js";
 import userRoute from "./routes/user.route.js";
+import paymentRoute from "./routes/payment.route.js";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use("/api/products", productRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/admin", adminRoute);
+app.use("/api/payment", paymentRoute);
 
 app.get("/", (req, res) => {
   res.send("Server is up and running!");
