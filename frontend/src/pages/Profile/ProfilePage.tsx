@@ -1,6 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import { FC, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { axiosPublic } from "../../api/axiosPublic";
 import { useAuth } from "../../hooks/useAuth";
 
 const ProfilePage: FC = (): JSX.Element => {
@@ -16,6 +18,17 @@ const ProfilePage: FC = (): JSX.Element => {
   const cityRef = useRef<HTMLInputElement>(null);
   const postalCodeRef = useRef<HTMLInputElement>(null);
   const photoUrlRef = useRef<HTMLInputElement>(null);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["current-user"],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/users/?email=${user?.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+  });
+
+  console.log(data, isLoading);
 
   if (authLoading) {
     return (
@@ -52,7 +65,6 @@ const ProfilePage: FC = (): JSX.Element => {
   const handleSaveProfile = async () => {
     const name = nameRef.current?.value.trim();
     const photoUrl = photoUrlRef.current?.value.trim();
-
 
     if (!name) {
       toast.error("Name is required");
@@ -101,16 +113,16 @@ const ProfilePage: FC = (): JSX.Element => {
               {/* Profile Picture */}
               <div className="relative">
                 <div className="w-32 h-32 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-200">
-                  {user.photoURL ? (
+                  {data?.imageUrl ? (
                     <img
-                      src={user.photoURL}
-                      alt={user.displayName || "Profile"}
+                      src={data?.imageUrl}
+                      alt={data?.name || "Profile"}
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-primary-color text-white text-4xl font-bold font-playFairDisplay">
-                      {user.displayName
-                        ? user.displayName.charAt(0).toUpperCase()
+                      {data?.name
+                        ? data?.name.charAt(0).toUpperCase()
                         : user.email?.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -120,7 +132,7 @@ const ProfilePage: FC = (): JSX.Element => {
               {/* Name & Email */}
               <div className="text-center sm:text-left sm:pb-1">
                 <h2 className="font-playFairDisplay text-2xl font-bold text-gray-800">
-                  {user.displayName || "User"}
+                  {data?.name || "User"}
                 </h2>
                 <p className="text-gray-500 font-openSans text-sm">
                   {user.email}
@@ -176,13 +188,13 @@ const ProfilePage: FC = (): JSX.Element => {
                   <input
                     ref={nameRef}
                     type="text"
-                    defaultValue={user.displayName || ""}
+                    defaultValue={data?.name || ""}
                     placeholder="e.g., Sarah Ahmed"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                   />
                 ) : (
                   <p className="text-gray-800 font-openSans px-4 py-2 bg-gray-50 rounded-lg">
-                    {user.displayName || "—"}
+                    {data?.name || "—"}
                   </p>
                 )}
               </div>
@@ -226,7 +238,7 @@ const ProfilePage: FC = (): JSX.Element => {
                   <input
                     ref={photoUrlRef}
                     type="url"
-                    defaultValue={user.photoURL || ""}
+                    defaultValue={data?.imageUrl || ""}
                     placeholder="e.g., https://example.com/photo.jpg"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                   />

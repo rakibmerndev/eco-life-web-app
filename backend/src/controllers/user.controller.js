@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 
 export const createUser = async (req, res) => {
-  const { name, email, imageUrl, role } = req.body;
+  const { name, email, imageUrl } = req.body;
 
   // Check if User exists on the database
   try {
@@ -24,9 +24,12 @@ export const createUser = async (req, res) => {
 };
 
 export const getCurrentUser = async (req, res) => {
-  const { id } = req.params;
+  const { email } = req.query;
+
+  console.log(email)
+
   try {
-    const user = await User.findById(id);
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -47,4 +50,8 @@ export const deleteUserById = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
+};
+
+export const updateUser = async (req, res) => {
+  res.send("Updating...");
 };
