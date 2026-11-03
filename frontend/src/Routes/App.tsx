@@ -11,6 +11,7 @@ import Home from "../pages/Home/Home.tsx";
 import Login from "../pages/Login/Login.tsx";
 import OrderSuccess from "../pages/OrderSuccess/OrderSuccess.tsx";
 import ProductDetail from "../pages/ProductDetail/ProductDetail.tsx";
+import ProfilePage from "../pages/Profile/ProfilePage.tsx";
 import Register from "../pages/Register/Register.tsx";
 import Shop from "../pages/Shop/Shop.tsx";
 
@@ -67,6 +68,10 @@ const App = createBrowserRouter([
       {
         path: "/checkout-success",
         element: <OrderSuccess />,
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />,
       },
     ],
   },

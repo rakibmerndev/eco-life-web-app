@@ -83,6 +83,14 @@ const Checkout: FC = (): JSX.Element => {
           productId: item.productId,
           quantity: item.quantity,
         })),
+        shipment: {
+          fullName,
+          email,
+          phone,
+          address,
+          city,
+          postalCode,
+        },
       };
 
       const response = await axiosPublic.post(
