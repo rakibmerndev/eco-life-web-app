@@ -13,7 +13,6 @@ const userSchema = new mongoose.Schema(
     },
     imageUrl: {
       type: String,
-      required: false,
       default: "https://cdn-icons-png.flaticon.com/512/6522/6522516.png",
     },
     role: {
@@ -21,12 +20,11 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
-    phone: {
-      type: Number,
-      unique: true,
+    phoneNumber: {
+      type: String,
     },
     postalCode: {
-      type: Number,
+      type: String,
     },
     city: {
       type: String,

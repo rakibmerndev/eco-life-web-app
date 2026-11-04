@@ -26,8 +26,6 @@ export const createUser = async (req, res) => {
 export const getCurrentUser = async (req, res) => {
   const { email } = req.query;
 
-  console.log(email)
-
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -52,6 +50,45 @@ export const deleteUserById = async (req, res) => {
   }
 };
 
+// Update the user
+
 export const updateUser = async (req, res) => {
-  res.send("Updating...");
+  const { email } = req.query;
+
+  const { name, imageUrl, city, postalCode, streetAddress, phoneNumber } =
+    req.body.updatedUser;
+
+  const updatedFields = {
+    name,
+    imageUrl,
+    city,
+    postalCode,
+    streetAddress,
+    phoneNumber,
+  };
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const result = await User.findOneAndUpdate(
+      { email },
+      { $set: updatedFields },
+      { new: true, runValidators: true },
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      user: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
 };

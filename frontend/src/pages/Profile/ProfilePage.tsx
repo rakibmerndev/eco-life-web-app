@@ -19,7 +19,7 @@ const ProfilePage: FC = (): JSX.Element => {
   const postalCodeRef = useRef<HTMLInputElement>(null);
   const photoUrlRef = useRef<HTMLInputElement>(null);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["current-user"],
     queryFn: async () => {
       const res = await axiosPublic.get(`/users/?email=${user?.email}`);
@@ -28,9 +28,7 @@ const ProfilePage: FC = (): JSX.Element => {
     enabled: !!user?.email,
   });
 
-  console.log(data, isLoading);
-
-  if (authLoading) {
+  if (authLoading || isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
@@ -65,6 +63,10 @@ const ProfilePage: FC = (): JSX.Element => {
   const handleSaveProfile = async () => {
     const name = nameRef.current?.value.trim();
     const photoUrl = photoUrlRef.current?.value.trim();
+    const city = cityRef.current?.value;
+    const postalCode = postalCodeRef.current?.value;
+    const streetAddress = addressRef.current?.value;
+    const phoneNumber = phoneRef.current?.value;
 
     if (!name) {
       toast.error("Name is required");
@@ -75,7 +77,22 @@ const ProfilePage: FC = (): JSX.Element => {
 
     try {
       updateUser(name, photoUrl || "");
-      toast.success("Profile updated successfully!");
+
+      const res = await axiosPublic.patch(`/users/?email=${user?.email}`, {
+        updatedUser: {
+          name,
+          imageUrl: photoUrl,
+          city,
+          postalCode,
+          streetAddress,
+          phoneNumber,
+        },
+      });
+
+      if (res.data.success) {
+        toast.success("Profile updated successfully!");
+        refetch();
+      }
       setIsEditing(false);
     } catch (error) {
       console.error("Profile update failed:", error);
@@ -218,13 +235,13 @@ const ProfilePage: FC = (): JSX.Element => {
                   <input
                     ref={phoneRef}
                     type="tel"
-                    defaultValue={user.phoneNumber || ""}
+                    defaultValue={data?.phoneNumber || ""}
                     placeholder="e.g., +880 1712 345678"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                   />
                 ) : (
                   <p className="text-gray-800 font-openSans px-4 py-2 bg-gray-50 rounded-lg">
-                    {user.phoneNumber || "—"}
+                    {data?.phoneNumber || "—"}
                   </p>
                 )}
               </div>
@@ -262,13 +279,14 @@ const ProfilePage: FC = (): JSX.Element => {
                 {isEditing ? (
                   <textarea
                     ref={addressRef}
+                    defaultValue={data?.streetAddress}
                     placeholder="e.g., 45 Green Lane, Building B, Apartment 302"
                     rows={3}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                   />
                 ) : (
                   <p className="text-gray-800 font-openSans px-4 py-2 bg-gray-50 rounded-lg min-h-[4rem]">
-                    —
+                    {data?.streetAddress || "—"}
                   </p>
                 )}
               </div>
@@ -281,13 +299,14 @@ const ProfilePage: FC = (): JSX.Element => {
                 {isEditing ? (
                   <input
                     ref={cityRef}
+                    defaultValue={data?.city}
                     type="text"
                     placeholder="e.g., Dhaka, Chittagong"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                   />
                 ) : (
                   <p className="text-gray-800 font-openSans px-4 py-2 bg-gray-50 rounded-lg">
-                    —
+                    {data?.city || "—"}
                   </p>
                 )}
               </div>
@@ -301,12 +320,13 @@ const ProfilePage: FC = (): JSX.Element => {
                   <input
                     ref={postalCodeRef}
                     type="text"
+                    defaultValue={data?.postalCode}
                     placeholder="e.g., 1212"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                   />
                 ) : (
                   <p className="text-gray-800 font-openSans px-4 py-2 bg-gray-50 rounded-lg">
-                    —
+                    {data?.postalCode || "-"}
                   </p>
                 )}
               </div>
