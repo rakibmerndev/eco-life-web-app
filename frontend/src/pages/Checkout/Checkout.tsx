@@ -1,16 +1,18 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC,  useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { axiosPublic } from "../../api/axiosPublic";
-import { useAuth } from "../../hooks/useAuth";
+
 import { useCart } from "../../hooks/useCart";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
+
 
 const Checkout: FC = (): JSX.Element => {
   const navigate = useNavigate();
   const { cart, getCartTotal } = useCart();
-  const { user, loading: authLoading } = useAuth();
 
-  const [isLoading, setIsLoading] = useState(false);
+
+
 
   const fullNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -19,18 +21,12 @@ const Checkout: FC = (): JSX.Element => {
   const cityRef = useRef<HTMLInputElement>(null);
   const addressRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
-    if (user) {
-      if (emailRef.current && user.email) {
-        emailRef.current.value = user.email;
-      }
-      if (fullNameRef.current && user.displayName) {
-        fullNameRef.current.value = user.displayName;
-      }
-    }
-  }, [user]);
+ const { user, authLoading, data, isLoading} = useCurrentUser();
 
-  if (authLoading) {
+
+
+
+  if (authLoading || isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
@@ -75,7 +71,6 @@ const Checkout: FC = (): JSX.Element => {
       return;
     }
 
-    setIsLoading(true);
 
     try {
       const orderData = {

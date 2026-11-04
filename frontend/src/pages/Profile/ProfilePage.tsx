@@ -1,13 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
 import { FC, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { axiosPublic } from "../../api/axiosPublic";
-import { useAuth } from "../../hooks/useAuth";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 
 const ProfilePage: FC = (): JSX.Element => {
   const navigate = useNavigate();
-  const { user, updateUser, loading: authLoading } = useAuth();
+  const { user, authLoading, data, isLoading, refetch, updateUser } = useCurrentUser();
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -18,15 +17,6 @@ const ProfilePage: FC = (): JSX.Element => {
   const cityRef = useRef<HTMLInputElement>(null);
   const postalCodeRef = useRef<HTMLInputElement>(null);
   const photoUrlRef = useRef<HTMLInputElement>(null);
-
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["current-user"],
-    queryFn: async () => {
-      const res = await axiosPublic.get(`/users/?email=${user?.email}`);
-      return res.data;
-    },
-    enabled: !!user?.email,
-  });
 
   if (authLoading || isLoading) {
     return (
