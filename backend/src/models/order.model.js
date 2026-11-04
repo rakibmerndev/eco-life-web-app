@@ -7,6 +7,13 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
+    stripeSessionId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+
     products: [
       {
         productId: {
@@ -14,8 +21,22 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
+        name: {
+          type: String,
+          required: true,
+        },
+        image: {
+          type: String,
+        },
+        price: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
         quantity: {
           type: Number,
+          required: true,
+          min: 1,
           default: 1,
         },
       },
@@ -24,7 +45,9 @@ const orderSchema = new mongoose.Schema(
     totalPrice: {
       type: Number,
       required: true,
+      min: 0,
     },
+
     shippingAddress: {
       fullName: {
         type: String,
@@ -34,11 +57,11 @@ const orderSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
-      phone: {
+      phoneNumber: {
         type: String,
         required: true,
       },
-      address: {
+      streetAddress: {
         type: String,
         required: true,
       },
@@ -51,14 +74,16 @@ const orderSchema = new mongoose.Schema(
         required: true,
       },
     },
+
     orderStatus: {
       type: String,
-      enum: ["pending", "shipped", "delivered", "cancelled"],
+      enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
       default: "pending",
     },
+
     paymentStatus: {
       type: String,
-      enum: ["pending", "completed", "failed"],
+      enum: ["pending", "completed", "failed", "refunded"],
       default: "pending",
     },
   },
