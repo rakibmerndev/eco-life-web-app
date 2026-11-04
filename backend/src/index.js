@@ -11,6 +11,11 @@ import paymentRoute from "./routes/payment.route.js";
 import productRoute from "./routes/product.route.js";
 import userRoute from "./routes/user.route.js";
 
+// Debug: Log environment variables on startup
+console.log("Environment variables loaded:");
+console.log("CLIENT_URL:", process.env.CLIENT_URL);
+console.log("MONGODB_URL:", process.env.MONGODB_URL ? "✓ Set" : "✗ Missing");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(express.json());

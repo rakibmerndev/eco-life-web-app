@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { FC, useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { axiosPublic } from "../../api/axiosPublic";
@@ -7,40 +8,72 @@ import { useCart } from "../../hooks/useCart";
 
 const OrderSuccess: FC = (): JSX.Element => {
   const { clearCart } = useCart();
-  const [isProcessing, setIsProcessing] = useState(true);
-  const [error, setError] = useState("");
 
+  //session ID from URL
+  const sessionId = new URLSearchParams(window.location.search).get(
+    "session_id",
+  );
+
+  //  fetch order confirmation
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["checkout-success", sessionId],
+    queryFn: async () => {
+      const res = await axiosPublic.post(
+        "/payment/checkout-success",
+        { sessionId },
+        { withCredentials: true },
+      );
+      return res.data;
+    },
+    enabled: !!sessionId,
+    retry: false,
+  });
+
+  // Clear cart on successful order
   useEffect(() => {
-    const handleCheckoutSuccess = async (sessionId: string | null) => {
-      try {
-        const res = await axiosPublic.post("/payment/checkout-success", {
-          sessionId,
-        });
-        console.log(res.data);
-
-        clearCart();
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsProcessing(false);
-      }
-    };
-
-    const sessionId = new URLSearchParams(window.location.search).get(
-      "session_id",
-    );
-
-    if (sessionId) {
-      handleCheckoutSuccess(sessionId);
-    } else {
-      setIsProcessing(false);
-      setError("No session ID found in the URL");
+    if (data?.success) {
+      clearCart();
     }
-  }, []);
+  }, [data, clearCart]);
 
-  if (isProcessing) return <p>Processing....</p>;
+  if (!sessionId) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 flex items-center justify-center">
+        <div className="max-w-2xl mx-auto px-4 text-center">
+          <p className="text-red-500 text-xl font-openSans">
+            Error: No session ID found in the URL
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-  if (error) return <div>{`Error: ${error}`}</div>;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-color"></div>
+          <p className="text-primary-color mt-4 font-openSans">
+            Processing your order...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 flex items-center justify-center">
+        <div className="max-w-2xl mx-auto px-4 text-center">
+          <p className="text-red-500 text-xl font-openSans">
+            Error: {(error as Error).message}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const orderData = data?.order;
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 flex items-center justify-center">
@@ -61,7 +94,9 @@ const OrderSuccess: FC = (): JSX.Element => {
         {/* Order ID */}
         <div className="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
           <p className="text-gray-600 font-openSans mb-2">Order ID</p>
-          <p className="text-2xl font-bold text-primary-color font-openSans break-all"></p>
+          <p className="text-2xl font-bold text-primary-color font-openSans break-all">
+            {orderData?._id}
+          </p>
         </div>
 
         {/* Info Box */}

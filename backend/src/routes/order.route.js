@@ -11,8 +11,8 @@ import { verifyToken } from "../middleware/auth.middleware.js";
 const router = Router();
 
 router.post("/", verifyToken, createOrder);
+router.get("/user/:userId", verifyToken, getOrdersByUserId);
 router.get("/:id", verifyToken, getOrderById);
-router.get("/:userId", verifyToken, getOrdersByUserId);
 router.put("/:id", verifyToken, updateOrderStatus);
 router.delete("/:id", verifyToken, deleteOrder);
 
