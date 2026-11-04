@@ -7,7 +7,7 @@ interface SecureRouteProps {
   children: ReactNode;
 }
 
-const SecureRoute: FC<SecureRouteProps> = ({ children }): JSX.Element => {
+const SecureRoute: FC<SecureRouteProps> = ({ children }): JSX.Element | null => {
   const { loading, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
