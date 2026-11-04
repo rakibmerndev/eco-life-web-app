@@ -1,4 +1,5 @@
-import { FC,  useRef, useState } from "react";
+
+import { FC, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { axiosPublic } from "../../api/axiosPublic";
@@ -6,13 +7,11 @@ import { axiosPublic } from "../../api/axiosPublic";
 import { useCart } from "../../hooks/useCart";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 
-
 const Checkout: FC = (): JSX.Element => {
   const navigate = useNavigate();
   const { cart, getCartTotal } = useCart();
 
-
-
+  const [isSaving, setIsSaving] = useState(false);
 
   const fullNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -21,17 +20,16 @@ const Checkout: FC = (): JSX.Element => {
   const cityRef = useRef<HTMLInputElement>(null);
   const addressRef = useRef<HTMLTextAreaElement>(null);
 
- const { user, authLoading, data, isLoading} = useCurrentUser();
-
-
-
+  const { user, authLoading, data, isLoading } = useCurrentUser();
 
   if (authLoading || isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-color"></div>
-          <p className="text-primary-color mt-4 font-openSans">Loading...</p>
+          <p className="text-primary-color mt-4 font-openSans">
+            Loading...
+          </p>
         </div>
       </div>
     );
@@ -59,41 +57,57 @@ const Checkout: FC = (): JSX.Element => {
   }
 
   const handlePlaceOrder = async () => {
-    const fullName = fullNameRef.current?.value.trim();
-    const email = emailRef.current?.value.trim();
-    const phone = phoneRef.current?.value.trim();
-    const address = addressRef.current?.value.trim();
-    const city = cityRef.current?.value.trim();
-    const postalCode = postalCodeRef.current?.value.trim();
+    if (isSaving) return;
 
-    if (!fullName || !email || !phone || !address || !city || !postalCode) {
-      toast.error("Please fill in all fields");
+    const fullName = fullNameRef.current?.value.trim() || "";
+    const email = emailRef.current?.value.trim() || "";
+    const phoneNumber = phoneRef.current?.value.trim() || "";
+    const streetAddress = addressRef.current?.value.trim() || "";
+    const city = cityRef.current?.value.trim() || "";
+    const postalCode = postalCodeRef.current?.value.trim() || "";
+
+    if (!cart.length) {
+      toast.error("Your cart is empty");
       return;
     }
 
+    if (
+      !fullName ||
+      !email ||
+      !phoneNumber ||
+      !streetAddress ||
+      !city ||
+      !postalCode
+    ) {
+      toast.error("Please fill in all shipping fields");
+      return;
+    }
+
+    const orderData = {
+      products: cart.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      })),
+
+      shippingAddress: {
+        fullName,
+        email,
+        phoneNumber,
+        streetAddress,
+        city,
+        postalCode,
+      },
+    };
+
+    setIsSaving(true);
 
     try {
-      const orderData = {
-        products: cart.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-        })),
-        shipment: {
-          fullName,
-          email,
-          phone,
-          address,
-          city,
-          postalCode,
-        },
-      };
-
       const response = await axiosPublic.post(
         "/payment/create-checkout-session",
         orderData,
         {
           withCredentials: true,
-        },
+        }
       );
 
       if (response.data?.url) {
@@ -103,13 +117,10 @@ const Checkout: FC = (): JSX.Element => {
       }
     } catch (error) {
       console.error("Order placement failed:", error);
-      if (error instanceof Error) {
-        toast.error(error.message || "Failed to place order");
-      } else {
-        toast.error("Failed to place order. Please try again.");
-      }
+
+      toast.error("Failed to place order. Please try again.");
     } finally {
-      setIsLoading(false);
+      setIsSaving(false);
     }
   };
 
@@ -118,18 +129,23 @@ const Checkout: FC = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="font-playFairDisplay text-4xl font-bold text-gray-800 mb-2">
             Checkout
           </h1>
-          <p className="text-gray-600 font-openSans">Complete your purchase</p>
+          <p className="text-gray-600 font-openSans">
+            Complete your purchase
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
           {/* Checkout Form */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
+
               {/* Shipping Information */}
               <div className="mb-8">
                 <h2 className="font-playFairDisplay text-2xl font-bold text-gray-800 mb-6">
@@ -137,6 +153,7 @@ const Checkout: FC = (): JSX.Element => {
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                   {/* Full Name */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2 font-openSans">
@@ -145,6 +162,7 @@ const Checkout: FC = (): JSX.Element => {
                     <input
                       ref={fullNameRef}
                       type="text"
+                      defaultValue={data?.name || ""}
                       placeholder="e.g., Sarah Ahmed"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
@@ -158,6 +176,7 @@ const Checkout: FC = (): JSX.Element => {
                     <input
                       ref={emailRef}
                       type="email"
+                      defaultValue={data?.email || user?.email || ""}
                       placeholder="e.g., sarah.ahmed@mail.com"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
@@ -171,6 +190,7 @@ const Checkout: FC = (): JSX.Element => {
                     <input
                       ref={phoneRef}
                       type="tel"
+                      defaultValue={data?.phoneNumber || ""}
                       placeholder="e.g., +880 1712 345678"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
@@ -184,6 +204,7 @@ const Checkout: FC = (): JSX.Element => {
                     <input
                       ref={postalCodeRef}
                       type="text"
+                      defaultValue={data?.postalCode || ""}
                       placeholder="e.g., 1212"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
@@ -197,23 +218,26 @@ const Checkout: FC = (): JSX.Element => {
                     <input
                       ref={cityRef}
                       type="text"
+                      defaultValue={data?.city || ""}
                       placeholder="e.g., Dhaka, Chittagong"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
                   </div>
 
-                  {/* Address - Full Width */}
+                  {/* Street Address */}
                   <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-gray-700 mb-2 font-openSans">
                       Street Address *
                     </label>
                     <textarea
                       ref={addressRef}
+                      defaultValue={data?.streetAddress || ""}
                       placeholder="e.g., 45 Green Lane, Building B, Apartment 302"
                       rows={3}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-1 focus:ring-primary-color font-openSans"
                     />
                   </div>
+
                 </div>
               </div>
 
@@ -244,6 +268,7 @@ const Checkout: FC = (): JSX.Element => {
                           </p>
                         </div>
                       </div>
+
                       <p className="font-semibold text-primary-color font-openSans">
                         {item.discountedPrice * item.quantity} $.
                       </p>
@@ -251,6 +276,7 @@ const Checkout: FC = (): JSX.Element => {
                   ))}
                 </div>
               </div>
+
             </div>
           </div>
 
@@ -265,14 +291,18 @@ const Checkout: FC = (): JSX.Element => {
               <div className="space-y-3 mb-6 pb-6 border-b border-gray-200 font-openSans">
                 <div className="flex justify-between text-gray-700">
                   <span>Items ({cart.length}):</span>
-                  <span className="font-semibold">{total} $.</span>
+                  <span className="font-semibold">
+                    {total} $.
+                  </span>
                 </div>
               </div>
 
               {/* Total */}
               <div className="mb-6">
                 <div className="flex justify-between items-center text-xl">
-                  <span className="font-semibold text-gray-800">Total:</span>
+                  <span className="font-semibold text-gray-800">
+                    Total:
+                  </span>
                   <span className="font-bold text-primary-color text-2xl">
                     {total} $.
                   </span>
@@ -282,10 +312,10 @@ const Checkout: FC = (): JSX.Element => {
               {/* Place Order Button */}
               <button
                 onClick={handlePlaceOrder}
-                disabled={isLoading}
+                disabled={isSaving || !cart.length}
                 className="w-full bg-primary-color text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed font-openSans"
               >
-                {isLoading ? "Processing..." : "Place Order"}
+                {isSaving ? "Processing..." : "Place Order"}
               </button>
 
               {/* Form Info */}
@@ -300,8 +330,10 @@ const Checkout: FC = (): JSX.Element => {
                   ✓ Order confirmation will be sent to your email
                 </p>
               </div>
+
             </div>
           </div>
+
         </div>
       </div>
     </div>

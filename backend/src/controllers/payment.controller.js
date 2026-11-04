@@ -4,7 +4,7 @@ import { Product } from "../models/product.model.js";
 // create stripe checkout for products
 export const handleCheckout = async (req, res) => {
   try {
-    const { products, shipment } = req.body;
+    const { products, shippingAddress } = req.body;
 
     if (!Array.isArray(products) || products.length === 0) {
       return res.status(400).json({ error: "No products provided" });
@@ -38,9 +38,8 @@ export const handleCheckout = async (req, res) => {
       success_url: `${process.env.CLIENT_URL}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.CLIENT_URL}/cart`,
       metadata: {
-        userEmail: JSON.stringify(shipment.email),
-        shipment: JSON.stringify(shipment),
-        products: JSON.stringify(products),
+        orderId: order._id.toString(),
+        userId: req.user._id.toString(),
       },
     });
 
@@ -63,16 +62,5 @@ export const handleCheckoutSuccess = async (req, res) => {
     });
   }
 
-  const shipment = JSON.parse(session.metadata.shipment);
-  const products = JSON.parse(session.metadata.products);
-  const userEmail = session.metadata.userEmail;
-
-  res
-    .status(200)
-    .json(
-      "getting info from handleCheckoutSuccess",
-      shipment,
-      products,
-      userEmail,
-    );
+  res.status(200).json("getting info from handleCheckoutSuccess");
 };
